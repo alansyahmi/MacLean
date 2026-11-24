@@ -1,0 +1,49 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Xcode / Swift
+.build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+.swiftpm/
+Package.resolved
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local experiment output and databases
+.experiments/
+experiments/local/
+*.sqlite
+*.sqlite3
+*.db
+*.csv
+*.jsonl
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.key
+
+# Python research utilities
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
