@@ -19,9 +19,10 @@ Every observation carries a stable name, numeric or categorical value, unit, sou
 |---|---|---|
 | OS, architecture, model, CPU | `sw_vers`, `uname`, allowlisted `sysctl` and `system_profiler` fields | Inventory only; values may be unavailable in restricted contexts. |
 | CPU utilization | Mach `host_statistics(HOST_CPU_LOAD_INFO)` tick deltas | Direct host aggregate. First sample establishes a counter baseline. |
-| Battery charge and source | `pmset -g batt` | Charge is an OS-reported percentage; it is not watt-hours or a short-window discharge rate. |
-| Battery voltage/current | IOPowerSources description of the present internal battery, with allowlisted fields only | Signed current in A and voltage in V when published; keys are optional. The full dictionary and identifiers are not retained. |
-| Battery signed power | Voltage × signed current | Derived watts preserving the sign supplied by IOPowerSources; sign convention is not generalized from one host. |
+| Battery charge and `pmset` source | `pmset -g batt` | Charge is an OS-reported percentage; it is not watt-hours or a short-window discharge rate. The source string is retained separately and may disagree with IOPowerSources. |
+| Battery power state and charging | IOPowerSources description | Used to gate battery discharge power; recorded separately from `pmset`'s source string. |
+| Battery voltage/current | IOPowerSources description first; documented IOPMPowerSource scalar-property fallback when a field is absent | Signed current in A and voltage in V when published. The registry fallback requires a unique installed battery service and reads only `Voltage`/`Amperage`; the full property table is not copied. Freshness remains OS/driver-dependent. |
+| Battery signed power | Voltage × signed current | Derived watts preserving the signed current; each input retains its own source. |
 | Battery discharge power | Absolute voltage × current when source is Battery Power and not charging | Derived watts; otherwise unavailable. Does not claim wall power or component power. |
 | Battery energy | Trapezoidal integration of consecutive discharge-power samples | Reported in Wh only with at least 95% trial coverage; a gap or AC operation leaves total trial energy unavailable. |
 | Thermal state | Foundation `ProcessInfo.thermalState` | Coarse OS state only; no physical temperature. |
@@ -33,7 +34,7 @@ Every observation carries a stable name, numeric or categorical value, unit, sou
 
 ### Power-source fields
 
-The adapter uses Apple's IOPowerSources accessor functions. The installed `IOPSKeys.h` defines `Voltage` as a signed integer in mV and `Current` as a signed integer in mA, and says Apple-defined sources may omit either field. The current validation host reported positive current while charging but no voltage; this does not validate current polarity during discharge. See [IOPowerSources API](https://developer.apple.com/documentation/iokit/1523839-iopscopypowersourcesinfo) and the research note in [docs/research/iokit-telemetry.md](research/iokit-telemetry.md).
+The primary adapter uses Apple's IOPowerSources accessors. If an electrical field is absent, MacLean matches the documented `IOPMPowerSource` class, requires exactly one installed battery, and reads only its documented `Voltage` and `Amperage` scalar properties. It does not copy or serialize the complete registry property table. IOPS voltage/current keys may be absent; the registry fallback's freshness is not guaranteed by the API. A battery-powered target observation showed negative IOPS current while `IOPowerSources` reported `Battery Power` and not charging. See Apple's [IOPowerSources API](https://developer.apple.com/documentation/iokit/1523839-iopscopypowersourcesinfo), [IOPMPowerSource properties](https://developer.apple.com/documentation/kernel/iopmpowersource), and the research note in [docs/research/iokit-telemetry.md](research/iokit-telemetry.md).
 
 ## Benchmark JSON
 

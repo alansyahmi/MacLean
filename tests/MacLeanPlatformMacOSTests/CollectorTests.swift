@@ -59,6 +59,30 @@ final class CollectorTests: XCTestCase {
         XCTAssertEqual(try XCTUnwrap(discharging.dischargePowerWatts), 6.0, accuracy: 0.0001)
     }
 
+    func testDocumentedBatteryRegistryFallbackFillsOnlyMissingElectricalFields() throws {
+        let iokit = PowerSourceReading(
+            voltageMillivolts: nil,
+            currentMilliamps: -500,
+            state: "Battery Power",
+            isCharging: false,
+            unavailableReason: nil
+        )
+        let registry = BatteryRegistryReading(
+            voltageMillivolts: 12_000,
+            currentMilliamps: 300,
+            source: BatteryRegistryReading.registrySource
+        )
+
+        let merged = iokit.fillingMissingValues(from: registry)
+
+        XCTAssertEqual(merged.voltageMillivolts, 12_000)
+        XCTAssertEqual(merged.currentMilliamps, -500)
+        XCTAssertEqual(merged.voltageSource, "IORegistry IOPMPowerSource Voltage property (mV)")
+        XCTAssertEqual(merged.currentSource, "IOPowerSources kIOPSCurrentKey (signed)")
+        XCTAssertEqual(try XCTUnwrap(merged.signedPowerWatts), -6.0, accuracy: 0.0001)
+        XCTAssertEqual(try XCTUnwrap(merged.dischargePowerWatts), 6.0, accuracy: 0.0001)
+    }
+
     func testPowermetricsParserKeepsUnrecognizedFieldsUnavailable() {
         let output = """
         **** Processor usage ****
