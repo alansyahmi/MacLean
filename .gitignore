@@ -27,11 +27,10 @@ Package.resolved
 # Local experiment output and databases
 .experiments/
 experiments/local/
+benchmarks/results/local/
 *.sqlite
 *.sqlite3
 *.db
-*.csv
-*.jsonl
 
 # Local configuration and secrets
 .env

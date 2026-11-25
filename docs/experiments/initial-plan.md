@@ -1,5 +1,7 @@
 # Initial Experimental Plan
 
+This procedure is an initial baseline proposal. The canonical metric and quality requirements are in [the telemetry specification](../TELEMETRY.md); subsystem-specific limitations are in the [module research specifications](../modules/cpu.md).
+
 ## Purpose
 
 Establish a trustworthy baseline before implementing optimisation controls. The first experiments are observational and should be repeatable on the same machine.
