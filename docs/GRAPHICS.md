@@ -26,7 +26,7 @@ Hold the same workload, brightness, network state, battery range, OS build, and 
 4. Each supported external-display arrangement.
 5. A known app set that can trigger discrete graphics, with application versions recorded.
 
-For each run, record display topology, reported active GPUs, GPU activity fields and their provenance, battery status, task time, thermal state, and any missing data. Repeat and alternate order where possible.
+For each run, record display topology, driver-reported activity fields and their provenance, battery status, task time, thermal state, and any missing data. Do not label utilization as the active or powered GPU. Repeat and alternate order where possible.
 
 ## Hypotheses
 
@@ -41,7 +41,7 @@ No driver unloading, device disabling, undocumented GPU-selection defaults write
 
 ## Open questions
 
-- Which utilization and power properties are available from the target AMD and Intel drivers?
+- Which utilization and power properties are available from the target AMD and Intel drivers, and what are their update windows?
 - What is the cost of each display topology on this exact Mac?
 - Can activity changes be correlated with repeatable battery-energy changes?
 - Is any system-wide GPU policy control documented and reversible on the target OS?

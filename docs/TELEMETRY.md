@@ -28,7 +28,8 @@ Every observation carries a stable name, numeric or categorical value, unit, sou
 | Thermal state | Foundation `ProcessInfo.thermalState` | Coarse OS state only; no physical temperature. |
 | Collector cost | Monotonic wall time and `getrusage` CPU time | Collector work only; includes first-sample host discovery. Idle wait, JSON serialization, and output writing are excluded. |
 | Frequency, CPU package power and C-state | Optional explicit `powermetrics` sampler | Disabled by default and accepted only when the process is already root. Package power is an OS estimate. Unparsed/unsupported values remain unavailable. |
-| GPU activity/power | No validated source | Inventory does not prove the active GPU or its power state. |
+| GPU activity | `IOAccelerator` driver's `PerformanceStatistics["Device Utilization %"]`, when published | Driver-reported utilization is exposed per driver class. It may be absent and is not a hardware power-state reading. |
+| Active GPU/power | No validated cross-model source | Utilization can show activity but does not prove which GPU is powered/selected or report its watts. |
 | Thunderbolt topology/power | On-demand `system_profiler` inventory only | Controller power state is unavailable; topology is not sampled at monitor cadence. |
 | Temperature/fan speed | No validated source | Unavailable; no private sensor keys are queried. |
 

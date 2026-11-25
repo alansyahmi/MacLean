@@ -33,6 +33,46 @@ final class CollectorTests: XCTestCase {
         XCTAssertNil(parseThunderboltTopology("{}"))
     }
 
+    func testGPUActivityParserSeparatesDriverUtilizationFromPowerState() {
+        let intel = GPUActivityReading.parse(
+            driverClass: "IntelAccelerator",
+            statistics: ["Device Utilization %": NSNumber(value: 54)]
+        )
+        let amd = GPUActivityReading.parse(
+            driverClass: "AMDRadeonAccelerator",
+            statistics: ["Other Driver Field": NSNumber(value: 1)]
+        )
+
+        XCTAssertEqual(intel.utilizationPercent, 54)
+        XCTAssertNil(amd.utilizationPercent)
+
+        let metrics = MacLeanGPUActivityCollector.metrics(from: [intel, amd])
+        let named = Dictionary(uniqueKeysWithValues: metrics.map { ($0.name, $0) })
+        XCTAssertEqual(named["graphics.accelerator.intelaccelerator.utilization"]?.value, 54)
+        XCTAssertEqual(named["graphics.accelerator.amdradeonaccelerator.utilization"]?.quality, .unavailable)
+        XCTAssertEqual(
+            named["graphics.activity_observed"]?.text,
+            "reported by: IntelAccelerator; unavailable on: AMDRadeonAccelerator"
+        )
+        XCTAssertEqual(named["graphics.activity_observed"]?.quality, .derived)
+        XCTAssertEqual(named["graphics.power_state"]?.quality, .unavailable)
+        XCTAssertNil(named["graphics.power_state"]?.value)
+
+        let unsupported = MacLeanGPUActivityCollector.metrics(from: [amd])
+        XCTAssertEqual(unsupported.first { $0.name == "graphics.activity_observed" }?.quality, .unavailable)
+        XCTAssertNil(unsupported.first { $0.name == "graphics.activity_observed" }?.value)
+    }
+
+    func testGPUActivityParserRejectsInvalidUtilizationValues() {
+        for value in [NSNumber(value: -1), NSNumber(value: 101), NSNumber(value: Double.nan), NSNumber(value: true)] {
+            let reading = GPUActivityReading.parse(
+                driverClass: "TestAccelerator",
+                statistics: ["Device Utilization %": value]
+            )
+            XCTAssertNil(reading.utilizationPercent)
+        }
+    }
+
     func testSubprocessTimeoutReturnsUnavailableResult() {
         XCTAssertNil(CommandRunner.run("/bin/sleep", arguments: ["2"], timeoutSeconds: 0.05))
     }

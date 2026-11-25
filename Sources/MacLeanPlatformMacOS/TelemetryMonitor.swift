@@ -292,17 +292,8 @@ public final class MacLeanTelemetrySession {
             quality: .direct
         ))
 
+        metrics.append(contentsOf: MacLeanGPUActivityCollector.collect())
         metrics.append(contentsOf: [
-            Self.unavailable(
-                "graphics.active_device",
-                source: "Live GPU activity source",
-                reason: "Hardware inventory identifies GPU models but not which GPU is active."
-            ),
-            Self.unavailable(
-                "graphics.power",
-                source: "powermetrics gpu_power sampler",
-                reason: "No validated live GPU power reading is available from this collector."
-            ),
             Self.unavailable(
                 "thunderbolt.controller_power",
                 source: "No validated source",
