@@ -2,7 +2,7 @@
 
 ## Status
 
-The first executable collector is a one-shot CLI inventory. It emits selected hardware and OS facts, one CPU/memory summary, and the operating-system battery status when available. It prints to stdout only and does not persist measurements. It is not a continuous sampler or an energy benchmark.
+The first executable command is a one-shot doctor inventory. It emits selected hardware and OS facts, battery health fields where exposed, and Foundation's coarse thermal state. It prints to stdout only and does not persist measurements. It is not a continuous sampler or an energy benchmark.
 
 The CLI deliberately excludes serial numbers, host names, user names, process lists, and raw power-assertion owner details. It does not invoke sudo or start powermetrics sampling.
 
@@ -24,17 +24,30 @@ Each future metric record should contain:
 
 An unsupported metric must never be serialized as numeric zero. Derived values must name their inputs and formula. Every sample is local by default.
 
+## Doctor capability states
+
+The CLI uses four states:
+
+- supported — the requested host feature or observation source was positively identified;
+- unsupported — the host architecture or explicit system response rules out the requested target;
+- unknown — the probe did not establish support or absence;
+- experimental — the capability is an isolated research track, not an enabled feature.
+
+An installed tool does not prove that its samplers work for a particular Mac. An available System Profiler data type does not prove a controller is present or expose its power state. The doctor report records those distinctions explicitly.
+
 ## Initial collection surface
 
 | Area | Initial source | Meaning and limitation |
 |---|---|---|
-| Model, CPU, memory | sysctl and filtered system_profiler output | Inventory facts only; may be unavailable under a restricted execution context |
+| Model, CPU, memory, firmware | sysctl and allowlisted system_profiler fields | Inventory facts only; may be unavailable under a restricted execution context |
 | OS and architecture | sw_vers and uname | Kernel and product versions must both be recorded |
 | Graphics model | Filtered SPDisplaysDataType fields | Identifies a reported GPU; does not prove active use, power, or switching state |
-| Battery | pmset battery status | State of charge and remaining-time values are operating-system estimates, not component power |
-| CPU and memory summary | One top summary sample | Brief process-table-free snapshot; not an energy or C-state measurement |
-| Thermal state | Future Foundation ProcessInfo adapter | Coarse system state; not a physical temperature sensor |
+| Battery | Allowlisted system_profiler health fields and pmset status | Cycle count/condition are OS-reported; state of charge and remaining-time values are estimates, not component power |
+| CPU and memory summary | Not sampled by doctor; the shell fallback has one top summary sample | A brief aggregate snapshot is not an energy or C-state measurement |
+| Thermal state | Foundation ProcessInfo | Coarse system state; not a physical temperature sensor |
 | CPU counters and wakeups | Optional powermetrics research | Samplers and privileges vary; no automatic invocation in the initial CLI |
+
+The doctor currently does not measure CPU utilization, GPU activity, discharge rate, wakeups, physical temperatures, fan speed, Thunderbolt controller state, or PCIe link power state. Those capabilities remain unknown until a separate low-overhead monitor validates a source on the target.
 
 If a command fails or a field is blocked, the collector must show unavailable and continue with other fields. It must not prompt for a password or retry with higher privileges.
 

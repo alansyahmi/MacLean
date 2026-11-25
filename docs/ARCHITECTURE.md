@@ -104,9 +104,11 @@ Future controls, if justified, move through this sequence:
 
 Failure to demonstrate repeatable benefit means the policy stays disabled or is removed.
 
-## Language and build-system decision
+## Initial CLI implementation
 
-Do not select a framework language from this architecture document. The repository initially contained only Markdown and an MIT license, with no source code or build tooling. Choose a runtime only after comparing native API coverage, maintenance cost, supported macOS versions, packaging, privilege boundaries, idle overhead, and the ability to test against the target Intel machine. Keep data contracts portable even after a runtime is selected.
+The repository initially contained only documentation and an MIT license, with no source code or build tooling. The first executable command uses Swift 6 and Swift Package Manager, with Foundation and native macOS command-line tools. This keeps the CLI close to macOS APIs without adding third-party dependencies. This choice does not bind the future UI, daemon, experimental modules, or portable data contracts to Swift.
+
+Revisit the implementation stack if native API coverage, maintenance cost, supported macOS versions, packaging, privilege boundaries, idle overhead, or target-machine validation indicate a better fit.
 
 ## Open decisions
 

@@ -18,11 +18,11 @@ MacLean is an experimental energy-efficiency and hardware-research project for I
 
 ## First step
 
-Run the one-shot, read-only inventory on a Mac:
+Run the one-shot, read-only capability report on a Mac:
 
-    sh interfaces/cli/maclean-discover.sh
+    swift run maclean doctor
 
-It reports selected model, CPU, memory, graphics, OS, battery, and current CPU/memory summary fields when the host exposes them. It does not print serial numbers, save a report, invoke privileged samplers, or change settings. The output is a starting inventory, not a benchmark or a component-power measurement.
+Use swift run maclean doctor --json for structured output. The command reports selected model, CPU, memory, graphics, OS, battery, thermal state, and available native tools when exposed. It does not print serial numbers, save a report, invoke privileged samplers, or change settings. The output is a capability inventory, not a benchmark or a component-power measurement. A shell-only fallback remains at interfaces/cli/maclean-discover.sh.
 
 ## Architecture map
 
@@ -37,7 +37,7 @@ It reports selected model, CPU, memory, graphics, OS, battery, and current CPU/m
 - tests/ — unit, integration, and regression verification
 - docs/ — architecture, roadmap, and research specifications
 
-Empty implementation directories are intentional scaffolding. The repository has no established language or build system, so the architecture and interfaces remain language-independent. The discovery command is a small shell utility, not a commitment for the eventual framework runtime.
+Empty implementation directories are intentional scaffolding. The repository initially had no source code or build system. The first CLI now uses Swift 6 and Swift Package Manager to call native macOS tools and Foundation; the core contracts and module boundaries remain language-independent.
 
 ## Documentation
 

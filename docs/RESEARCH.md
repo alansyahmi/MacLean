@@ -75,6 +75,7 @@ These projects are research references, not dependencies selected for MacLean. D
 - [Apple IOPCIDevice power-management methods](https://developer.apple.com/documentation/pcidriverkit/iopcidevice)
 - [Apple hardware security overview](https://support.apple.com/guide/security/hardware-security-overview-secf020d1074/web)
 - [Apple boot process for an Intel-based Mac](https://support.apple.com/guide/security/boot-process-for-an-intel-based-mac-sec5d0fab7c6/web)
+- [Apple: Mac computers with the T2 Security Chip](https://support.apple.com/en-us/103265)
 - [Intel Core i9-9980HK specifications](https://www.intel.com/content/www/us/en/products/sku/192990/intel-core-i99980hk-processor-16m-cache-up-to-5-00-ghz/specifications.html)
 - [Intel 8th/9th Generation Core processor datasheet](https://cdrdv2-public.intel.com/337344/337344_8th-gen-core-family-datasheet-vol-1_Rev009.pdf)
 - [MacPulse source repository](https://github.com/vluncasu/macpulse)
