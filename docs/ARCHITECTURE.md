@@ -4,7 +4,7 @@
 
 MacLean is a research framework for measuring and evaluating energy-efficiency ideas on Intel Macs. Its first deliverables are inventory, read-only telemetry, and reproducible experiments. It does not currently implement system-changing controls.
 
-The repository had no source code, package manifest, or build system when inspected. Component contracts therefore stay language-independent. The one-shot shell inventory is an operator tool, not a framework runtime decision.
+The initial repository inspection found no source code, package manifest, or build system. The current executable uses Swift 6 and Swift Package Manager, while component contracts stay language-independent.
 
 ## System boundary
 
@@ -19,7 +19,7 @@ Initial data flow:
 5. A policy engine may simulate or recommend an action; it cannot silently write settings.
 6. A safety gate validates compatibility, reversibility, and the user's explicit request before any future control path.
 
-The initial CLI runs on demand. There is no background daemon, launch agent, continuous poller, database, or network service.
+The CLI runs only when the user invokes it. There is no background daemon, launch agent, database, or network service. The optional monitor emits periodic samples while the command remains open and stops after its requested count or when interrupted.
 
 ## Component responsibilities
 
@@ -70,7 +70,7 @@ An experiment records the machine class, OS build, battery condition if availabl
 
 The design prefers existing macOS behaviour and public interfaces:
 
-- Use host-level CPU statistics for utilization and available Foundation/IOKit APIs for system state.
+- Use Mach host-level CPU statistics for utilization and available Foundation/IOKit APIs for system state.
 - Use battery power-source APIs for battery status and estimates, while clearly marking estimates.
 - Use ProcessInfo thermal state as a coarse system signal, not as a per-die temperature.
 - Use NSBackgroundActivityScheduler, discretionary work, QoS, and flexible timers for MacLean's own work. These mechanisms do not let MacLean reschedule arbitrary applications globally.
@@ -83,7 +83,7 @@ No undocumented SMC keys, private IOReport channels, undocumented MSR writes, fi
 
 ## Sampling and overhead
 
-Every collector documents expected cost, cadence, permissions, and the sleep/wake behaviour of its source. Collection is on-demand or event-driven first. A visible UI may use a bounded, adaptive cadence, but the closed or idle product should return to near-zero work. No sub-second or busy polling is allowed without evidence that it is necessary and that its own energy cost is acceptably small.
+Every collector documents expected cost, cadence, permissions, and the sleep/wake behaviour of its source. Collection is on-demand or event-driven first. The current CLI monitor defaults to a five-second interval, requires at least one second, and reports collection wall time and process CPU time; this overhead record does not yet establish the monitor's effect on battery energy. A visible UI may use a bounded, adaptive cadence, but the closed or idle product should return to near-zero work. No sub-second or busy polling is allowed without evidence that it is necessary and that its own energy cost is acceptably small.
 
 When values cannot be collected safely or accurately, the interface reports unavailable with a reason. It does not fall back to scraping private data or guessing from unrelated counters.
 

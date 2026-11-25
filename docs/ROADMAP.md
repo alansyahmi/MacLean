@@ -4,8 +4,8 @@ MacLean advances only when each phase produces reviewable evidence. Safety requi
 
 | Phase | Focus | Deliverable | Exit evidence |
 |---|---|---|---|
-| 0 | Hardware discovery | Privacy-conscious host inventory and capability matrix | Exact target model, CPU/GPU, OS build, battery condition, and unknown fields recorded without unique identifiers |
-| 1 | Read-only telemetry | Low-overhead metric adapters and a documented metric-quality model | Source, units, cadence, permissions, unavailable behaviour, and measurement cost recorded for each field |
+| 0 | Hardware discovery | Privacy-conscious host inventory and capability matrix | `doctor` inventory available; target-machine confirmation and blocked fields still to be recorded |
+| 1 | Read-only telemetry | On-demand JSON Lines monitor and documented metric-quality model | Initial Mach CPU, battery status, and coarse thermal observations implemented; low-overhead and sleep/wake behaviour still need target-host validation |
 | 2 | Baseline experiments | Repeatable idle, compilation, wakeup, and graphics procedures | Multiple trials, workload completion time, energy indicator, conditions, variance, and confounders captured |
 | 3 | CPU research | C-state, frequency, wakeup, and race-to-idle analysis | Findings tied to exact hardware/OS; no frequency-only claims; measurement limits recorded |
 | 4 | Background work | Recommendations for MacLean-owned work using QoS, timer tolerance, and system deferral | Demonstrated effect on MacLean's own energy cost without harming foreground responsiveness |
@@ -18,10 +18,10 @@ MacLean advances only when each phase produces reviewable evidence. Safety requi
 
 ## Immediate work
 
-1. Maintain the directory scaffold and module specifications.
-2. Collect a hardware inventory on the actual 2019 Intel test Mac using the read-only CLI.
-3. Record any unavailable field and check the local macOS manual for supported powermetrics samplers without assuming privileges.
-4. Define a low-overhead telemetry contract and a manual baseline worksheet.
+1. Run `maclean doctor` and a short `maclean monitor` session on the actual 2019 Intel test Mac; review unknown fields and collection overhead.
+2. Validate the coarse CPU, battery, and thermal sources across repeat runs and sleep/wake transitions.
+3. Keep frequency, C-state, wakeup, voltage/current, GPU activity, and controller power unavailable until a safe source and its permissions are validated.
+4. Build a manual baseline worksheet and record repeated workload and measurement conditions.
 5. Do not implement invasive hardware controls until the corresponding research note answers the unresolved questions and a reversible supported interface is identified.
 
 ## Promotion criteria

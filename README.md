@@ -24,6 +24,8 @@ Run the one-shot, read-only capability report on a Mac:
 
 Use swift run maclean doctor --json for structured output. The command reports selected model, CPU, memory, graphics, OS, battery, thermal state, and available native tools when exposed. It does not print serial numbers, save a report, invoke privileged samplers, or change settings. The output is a capability inventory, not a benchmark or a component-power measurement. A shell-only fallback remains at interfaces/cli/maclean-discover.sh.
 
+Collect a short telemetry sample as JSON Lines with `swift run maclean monitor --interval 5 --count 12`. The monitor runs only while invoked, prints to stdout, and does not save or upload data. It reports the OS build and non-unique host model context, Mach CPU utilization after the first counter interval, `pmset` battery status, and Foundation's coarse thermal state. Each record includes collection wall time and process/child CPU time. Unsupported or unvalidated measurements remain unavailable; the command never requests administrator privileges.
+
 ## Architecture map
 
 - core/ — policy, scheduling concepts, profiles, and capability contracts
@@ -37,7 +39,7 @@ Use swift run maclean doctor --json for structured output. The command reports s
 - tests/ — unit, integration, and regression verification
 - docs/ — architecture, roadmap, and research specifications
 
-Empty implementation directories are intentional scaffolding. The repository initially had no source code or build system. The first CLI now uses Swift 6 and Swift Package Manager to call native macOS tools and Foundation; the core contracts and module boundaries remain language-independent.
+Research and control directories remain scaffolding until a module has an evidence-backed implementation. The current Swift 6 package separates shared telemetry contracts, macOS collectors and adapters, and the CLI. The contracts and module boundaries remain language-independent.
 
 ## Documentation
 

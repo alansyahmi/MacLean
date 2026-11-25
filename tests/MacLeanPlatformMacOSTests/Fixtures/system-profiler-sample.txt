@@ -1,0 +1,9 @@
+Hardware:
+    Model Name: MacBook Pro
+    Model Identifier: MacBookPro15,1
+    Processor Name: 6-Core Intel Core i7
+    Memory: 16 GB
+    Serial Number (system): FIXTURE-ONLY-SHOULD-NOT-BE-CAPTURED
+Graphics/Displays:
+    Chipset Model: Intel UHD Graphics 630
+    Chipset Model: Radeon Pro 5500M

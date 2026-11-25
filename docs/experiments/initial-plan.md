@@ -20,15 +20,15 @@ Keep conditions consistent: same brightness and keyboard backlight, network stat
 
 1. Reboot and allow background startup activity to settle.
 2. Record a quiet desktop baseline.
-3. Sample available telemetry for a fixed period.
-4. Record power assertions, wakeups, thermal state, and battery discharge estimate.
+3. Sample available telemetry for a fixed period with `maclean monitor --interval 5 --count 60`.
+4. Record thermal state and OS-reported battery percentage. Obtain power assertions or wakeups only from a separate validated source; the initial monitor does not collect them.
 5. Repeat with the normal development environment open.
 
 Primary question: what background activity prevents the system from remaining in low-power idle states?
 
 ## Experiment 02 — macOS Low Power Mode
 
-Compare Low Power Mode enabled and disabled under matched conditions. Record task completion time, CPU utilisation and frequency observations where available, thermal behaviour, battery discharge estimate, and responsiveness as a secondary observation.
+Compare Low Power Mode enabled and disabled under matched conditions. Record task completion time, CPU utilisation and frequency observations where available, thermal behaviour, battery percentage change across sufficiently long repeated trials, and responsiveness as a secondary observation. The monitor does not report a battery discharge rate.
 
 Do not infer CPU package power from battery discharge alone.
 

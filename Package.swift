@@ -8,6 +8,22 @@ let package = Package(
         .executable(name: "maclean", targets: ["MacLeanCLI"])
     ],
     targets: [
-        .executableTarget(name: "MacLeanCLI")
+        .target(name: "MacLeanCore"),
+        .target(name: "MacLeanPlatformMacOS", dependencies: ["MacLeanCore"]),
+        .executableTarget(
+            name: "MacLeanCLI",
+            dependencies: ["MacLeanCore", "MacLeanPlatformMacOS"]
+        ),
+        .testTarget(
+            name: "MacLeanCoreTests",
+            dependencies: ["MacLeanCore"],
+            path: "tests/MacLeanCoreTests"
+        ),
+        .testTarget(
+            name: "MacLeanPlatformMacOSTests",
+            dependencies: ["MacLeanCore", "MacLeanPlatformMacOS"],
+            path: "tests/MacLeanPlatformMacOSTests",
+            resources: [.copy("Fixtures")]
+        )
     ]
 )

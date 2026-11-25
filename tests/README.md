@@ -1,3 +1,3 @@
 # Verification
 
-When implementation code is added, cover metric parsing, unavailable-value handling, policy simulation, compatibility gates, and rollback. Hardware-specific checks must be safe to skip when the capability is absent. Do not use tests that write undocumented hardware settings.
+Run `swift test` to exercise metric serialization, allowlisted System Profiler and battery parsing using local fixtures, and subprocess timeout handling. Hardware-specific collection is not required by the test suite. Future policy, compatibility, and rollback tests must not write undocumented hardware settings.
