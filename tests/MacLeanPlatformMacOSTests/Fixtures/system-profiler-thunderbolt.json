@@ -1,0 +1,21 @@
+{
+  "SPThunderboltDataType": [
+    {
+      "_name": "Thunderbolt Bus",
+      "device_name_key": "DO-NOT-RETAIN Controller",
+      "switch_uid_key": "DO-NOT-RETAIN-IDENTIFIER",
+      "receptacle_1_tag": {
+        "link_status_key": "DO-NOT-RETAIN Link",
+        "current_speed_key": "DO-NOT-RETAIN Speed"
+      },
+      "receptacle_2_tag": {
+        "link_status_key": "DO-NOT-RETAIN Link"
+      }
+    },
+    {
+      "_name": "Thunderbolt Bus",
+      "domain_uuid_key": "DO-NOT-RETAIN-UUID",
+      "receptacle_1_tag": {}
+    }
+  ]
+}

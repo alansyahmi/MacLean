@@ -38,6 +38,8 @@ struct HardwareSummary: Codable {
     var batteryCurrent: String?
     var batteryPowerSource: String?
     var batteryChargingState: String?
+    var thunderboltControllerCount: Int?
+    var thunderboltPortCount: Int?
     var systemThermalState: String
 }
 

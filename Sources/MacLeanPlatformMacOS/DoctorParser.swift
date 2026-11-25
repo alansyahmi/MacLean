@@ -83,6 +83,22 @@ func parseBatteryStatus(_ output: String) -> (source: String?, percent: String?,
     return (source, percent, state)
 }
 
+func parseThunderboltTopology(_ output: String) -> (controllerCount: Int, portCount: Int)? {
+    guard let data = output.data(using: .utf8),
+          let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+          let controllers = root["SPThunderboltDataType"] as? [[String: Any]] else {
+        return nil
+    }
+
+    let receptacleKeys = ["receptacle_1_tag", "receptacle_2_tag"]
+    let portCount = controllers.reduce(into: 0) { count, controller in
+        count += receptacleKeys.reduce(into: 0) { portCount, key in
+            if controller[key] is [String: Any] { portCount += 1 }
+        }
+    }
+    return (controllers.count, portCount)
+}
+
 func firstMatch(_ pattern: String, in value: String) -> String? {
     guard let regex = try? NSRegularExpression(pattern: pattern) else { return nil }
     let range = NSRange(value.startIndex..., in: value)

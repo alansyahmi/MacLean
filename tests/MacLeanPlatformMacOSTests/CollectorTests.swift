@@ -23,6 +23,16 @@ final class CollectorTests: XCTestCase {
         XCTAssertEqual(battery.state, "discharging")
     }
 
+    func testThunderboltParserKeepsOnlyTopologyCounts() throws {
+        let output = try fixture("system-profiler-thunderbolt.json")
+        let topology = try XCTUnwrap(parseThunderboltTopology(output))
+
+        XCTAssertEqual(topology.controllerCount, 2)
+        XCTAssertEqual(topology.portCount, 3)
+        XCTAssertFalse(String(describing: topology).contains("DO-NOT-RETAIN"))
+        XCTAssertNil(parseThunderboltTopology("{}"))
+    }
+
     func testSubprocessTimeoutReturnsUnavailableResult() {
         XCTAssertNil(CommandRunner.run("/bin/sleep", arguments: ["2"], timeoutSeconds: 0.05))
     }

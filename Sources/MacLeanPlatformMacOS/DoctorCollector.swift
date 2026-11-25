@@ -48,6 +48,17 @@ private func buildReport() -> DoctorReport {
     }
     let profilerOutput = profilerResult?.output ?? ""
     let facts = parseProfile(profilerOutput)
+    let thunderboltTopology: (controllerCount: Int, portCount: Int)?
+    if availableTypes.contains("SPThunderboltDataType"),
+       let result = CommandRunner.run(
+           "/usr/sbin/system_profiler",
+           arguments: ["-json", "-detailLevel", "mini", "SPThunderboltDataType"]
+       ),
+       result.status == 0 {
+        thunderboltTopology = parseThunderboltTopology(result.output)
+    } else {
+        thunderboltTopology = nil
+    }
     let batteryOutput = CommandRunner.value("/usr/bin/pmset", arguments: ["-g", "batt"]) ?? ""
     let batteryStatus = parseBatteryStatus(batteryOutput)
     let thermal = thermalStateName()
@@ -74,6 +85,8 @@ private func buildReport() -> DoctorReport {
         batteryCurrent: facts.batteryCurrent,
         batteryPowerSource: batteryStatus.source,
         batteryChargingState: batteryStatus.state,
+        thunderboltControllerCount: thunderboltTopology?.controllerCount,
+        thunderboltPortCount: thunderboltTopology?.portCount,
         systemThermalState: thermal
     )
 
@@ -183,9 +196,16 @@ private func buildReport() -> DoctorReport {
                 : "The System Profiler data type was not listed by this macOS build."
         ),
         makeCapability(
-            "thunderbolt.controller_and_device_presence",
+            "thunderbolt.controller_and_port_topology",
+            thunderboltTopology == nil ? .unknown : .supported,
+            thunderboltTopology.map {
+                "System Profiler reported \($0.controllerCount) controller entries and \($0.portCount) receptacle entries; identifiers and device names are omitted."
+            } ?? "The selected System Profiler JSON fields were unavailable or did not match the current schema."
+        ),
+        makeCapability(
+            "thunderbolt.controller_power_state",
             .unknown,
-            "The read-only inventory does not normalize controller and attached-device topology yet."
+            "The inventory reports topology only; controller suspension, PCIe ASPM, and power-gating state are not exposed by a validated source."
         ),
         makeCapability(
             "t2.presence",
@@ -313,6 +333,7 @@ private func printHumanReport(_ report: DoctorReport) {
     if let charging = report.hardware.batteryChargingState {
         print("  Battery state: \(charging)")
     }
+    print("  Thunderbolt controllers/ports: \(report.hardware.thunderboltControllerCount.map(String.init) ?? "unavailable") / \(report.hardware.thunderboltPortCount.map(String.init) ?? "unavailable") (topology counts only)")
     print("  System thermal state: \(report.hardware.systemThermalState) (coarse OS signal)")
     print()
 
