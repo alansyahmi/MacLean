@@ -6,7 +6,7 @@ Shorter requested intervals increase MacLean's own CPU and wall-time cost and ca
 
 ## Controlled variables
 
-Same host/build, prebuilt release executable, `desktop-idle` scenario, AC power, 300-second target duration, one trial per interval, no warm-up, same foreground/background state. Order: 1 s, 5 s, 30 s, 15 s. No source build occurred during measurements.
+Same host/build, prebuilt release executable, `desktop-idle` scenario, 300-second target duration, one trial per interval, no warm-up, same foreground/background state. Order: 1 s, 5 s, 30 s, 15 s. `pmset` reported AC power during those trials, but the operator later confirmed the Mac was physically unplugged. No source build occurred during measurements.
 
 ## Measurement sources
 
@@ -25,7 +25,7 @@ All intervals use the same executable and condition; actual duration is within 2
 
 ## Results
 
-Single screening pass on 2026-11-25, macOS 26.7.3 build 25G342, x86_64 Intel Mac, on AC; release executable, 300 seconds each, one repetition each. Trial order was 1, 5, 30, 15 seconds. All runs had zero valid battery-discharge samples.
+Single screening pass on 2026-11-25, macOS 26.7.3 build 25G342, x86_64 Intel Mac; release executable, 300 seconds each, one repetition each. Trial order was 1, 5, 30, 15 seconds. The operator later confirmed the Mac was physically on battery despite `pmset` reporting AC. All runs had zero valid battery-discharge samples.
 
 | Requested interval | Samples | Mean observed interval | Collector wall cost | Wall cost / duration | Collector CPU | CPU / duration |
 |---:|---:|---:|---:|---:|---:|---:|
@@ -38,4 +38,4 @@ All actual durations were about 300.1 seconds. The 1-second run produced fewer t
 
 ## Limitations
 
-The Mac was AC-powered, battery voltage was unavailable to the IOPowerSources-only build, and no discharge energy was measured. These trials predate both the IOPMPowerSource scalar fallback and the per-sample GPU activity reads, so repeat the interval study against the current release. The run order was not fully counterbalanced. CPU utilization varied across intervals and cannot be interpreted as collector energy. Repeat each cadence at least three times, then repeat on battery with adequate discharge-power coverage before choosing a default.
+The Mac was physically on battery per the operator's later confirmation, but battery voltage was unavailable to the IOPowerSources-only build, so no discharge energy was measured. `pmset`'s AC report conflicted with the known physical condition. These trials predate both the IOPMPowerSource scalar fallback and the per-sample GPU activity reads, so repeat the interval study against the current release while physically plugged in. The run order was not fully counterbalanced. CPU utilization varied across intervals and cannot be interpreted as collector energy. Repeat each cadence at least three times, then repeat on battery with adequate discharge-power coverage before choosing a default.

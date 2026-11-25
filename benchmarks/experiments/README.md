@@ -6,9 +6,9 @@ This registry records controlled, read-only studies for selecting MacLean's firs
 |---|---|---|
 | [E001](E001-graphics-baseline/README.md) | Does native automatic graphics switching change matched idle energy or package residency? | Not run; active GPU power state is unavailable |
 | [E002](E002-thunderbolt-baseline/README.md) | Does an optional Thunderbolt peripheral change matched idle energy or package residency? | Not run; topology counts are available, controller power state is not |
-| [E003](E003-background-wakeups/README.md) | Which background tasks and wakeups coincide with elevated idle CPU use? | Not run; privileged task sampling has not been authorized or validated |
-| [E004](E004-native-low-power-mode/README.md) | Does native Low Power Mode change idle energy and performance on this host? | Not run; host support and battery-power trials remain to be confirmed |
-| [E005](E005-collector-overhead/README.md) | How does MacLean collection overhead change with sampling interval? | One AC-powered screening pass recorded; repeat trials pending |
+| [E003](E003-background-wakeups/README.md) | Which background tasks and wakeups coincide with elevated idle CPU use? | CPU-only idle trials exist; privileged task sampling has not been authorized or validated |
+| [E004](E004-native-low-power-mode/README.md) | Does native Low Power Mode change idle energy and performance on this host? | Not run; host support and matched comparisons remain to be confirmed |
+| [E005](E005-collector-overhead/README.md) | How does MacLean collection overhead change with sampling interval? | One physically battery-powered screening pass had no energy coverage; repeat trials pending |
 
 ## Shared rules
 

@@ -28,7 +28,7 @@ At least three valid battery trials per state; 95% or greater discharge-power co
 
 ## Results
 
-Not run. The host was on AC during the available benchmark sessions. Feature support and battery-powered performance have not been confirmed.
+Not run. The operator confirms earlier benchmark sessions were physically battery-powered, despite `pmset` reporting AC in some captures. Native Low Power Mode support and its battery-powered performance effect have not been confirmed.
 
 ## Limitations
 
