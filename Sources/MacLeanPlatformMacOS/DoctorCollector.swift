@@ -1,4 +1,5 @@
 import Foundation
+import MacLeanCore
 
 func thermalStateName() -> String {
     switch ProcessInfo.processInfo.thermalState {
@@ -331,6 +332,25 @@ private func printHumanReport(_ report: DoctorReport) {
 
 
 public enum MacLeanDoctor {
+    public static func benchmarkHardwareContext() -> BenchmarkHardwareContext {
+        let report = buildReport()
+        return BenchmarkHardwareContext(
+            capturedAt: report.generatedAt,
+            source: "maclean doctor allowlisted system_profiler and sysctl fields",
+            modelName: report.hardware.modelName,
+            modelIdentifier: report.hardware.modelIdentifier,
+            processorName: report.hardware.processorName,
+            processorSpeed: report.hardware.processorSpeed,
+            coreCount: report.hardware.coreCount,
+            memory: report.hardware.memory,
+            graphicsDevices: report.hardware.graphicsDevices,
+            graphicsMemory: report.hardware.graphicsMemory,
+            batteryCondition: report.hardware.batteryCondition,
+            batteryCycleCount: report.hardware.batteryCycleCount,
+            batteryFullChargeCapacity: report.hardware.batteryFullChargeCapacity
+        )
+    }
+
     @discardableResult
     public static func run(json: Bool) -> Bool {
         let report = buildReport()

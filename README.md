@@ -26,6 +26,8 @@ Use swift run maclean doctor --json for structured output. The command reports s
 
 Collect a short telemetry sample as JSON Lines with `swift run maclean monitor --interval 5 --count 12`. The monitor runs only while invoked, prints to stdout, and does not save or upload data. It reports the OS build and non-unique host model context, Mach CPU utilization after the first counter interval, `pmset` battery status, and Foundation's coarse thermal state. Each record includes collection wall time and process/child CPU time. Unsupported or unvalidated measurements remain unavailable; the command never requests administrator privileges.
 
+Run repeated baselines with `swift run maclean benchmark run --scenario desktop-idle --repetitions 3 --output /private/tmp/maclean-idle.json`. Results include native signed battery current and voltage when available, derived discharge watts and integrated watt-hours only with valid coverage, metric provenance, repeat variation, and MacLean's collector overhead. The benchmark does not start the workload or change system settings. See [benchmark instructions](benchmarks/README.md) and [IOKit telemetry research](docs/research/iokit-telemetry.md).
+
 ## Architecture map
 
 - core/ — policy, scheduling concepts, profiles, and capability contracts

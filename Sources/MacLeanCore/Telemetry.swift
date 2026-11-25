@@ -69,18 +69,27 @@ public struct TelemetryHostContext: Codable, Sendable {
     public let architecture: String
     public let modelIdentifier: String?
     public let processorName: String?
+    public let physicalCPUCount: Int?
+    public let logicalCPUCount: Int?
+    public let memoryBytes: UInt64?
 
     public init(
         operatingSystemVersion: String,
         operatingSystemBuild: String?,
         architecture: String,
         modelIdentifier: String?,
-        processorName: String?
+        processorName: String?,
+        physicalCPUCount: Int? = nil,
+        logicalCPUCount: Int? = nil,
+        memoryBytes: UInt64? = nil
     ) {
         self.operatingSystemVersion = operatingSystemVersion
         self.operatingSystemBuild = operatingSystemBuild
         self.architecture = architecture
         self.modelIdentifier = modelIdentifier
         self.processorName = processorName
+        self.physicalCPUCount = physicalCPUCount
+        self.logicalCPUCount = logicalCPUCount
+        self.memoryBytes = memoryBytes
     }
 }
