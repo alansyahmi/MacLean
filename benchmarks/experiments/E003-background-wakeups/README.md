@@ -27,7 +27,7 @@ At least three valid trials per condition; task/wakeup parser validated against 
 
 ## Results
 
-The process-wakeup study has not been run. The initial three 10-minute idle CPU trials were physically battery-powered, as the operator later confirmed, although `pmset` reported AC. They averaged 8.21% CPU utilization with 2.28 percentage points between-trial standard deviation. Those trials predate battery voltage fallback and have no integrated energy result. The single E005 screen pass later showed 3.05–3.78% mean utilization across intervals, but it was shorter and not a matched repeat; it does not establish a change. None of these data identify processes, measure battery energy, or establish reduced package C-state residency. The optional task sampler has not been run in an authorized session.
+The process-wakeup study has not been run. The initial three 10-minute idle CPU trials were physically battery-powered, as the operator later confirmed, although `pmset` reported AC. They averaged 8.21% CPU utilization with 2.28 percentage points between-trial standard deviation. Those trials predate battery voltage fallback and have no integrated energy result. The current E005 AC repeat study showed mean CPU utilization from 1.19% to 2.66% across intervals, with high between-trial variation at 15 seconds; it is not matched to the earlier battery trials or instrumentation and does not establish a change. None of these data identify processes, measure battery energy, or establish reduced package C-state residency. The optional task sampler has not been run in an authorized session.
 
 ## Limitations
 

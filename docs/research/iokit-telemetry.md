@@ -45,7 +45,7 @@ MacLean therefore reports topology counts separately from telemetry and leaves c
 3. Which exact `powermetrics` fields and samplers are available on the target's OS build, and which require root? Can task names and wakeups be parsed without retaining unrelated process details?
 4. How frequently is the target driver's utilization value updated, and does its meaning remain stable across OS and driver versions? Is there any documented cross-model power-state source?
 5. Can Thunderbolt controller state be observed through a public, stable interface without driver-specific undocumented keys?
-6. What collection cadence provides adequate resolution without changing idle wakeups or battery drain? E005's single AC pass shows collector cost falls at coarser intervals, but repeat and battery trials are needed.
+6. What collection cadence provides adequate resolution without changing idle wakeups or battery drain? E005's three AC repeats per interval show collection overhead falls at coarser intervals; a battery study is still needed to quantify battery impact.
 
 ## Sources reviewed
 

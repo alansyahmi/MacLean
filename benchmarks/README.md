@@ -1,6 +1,6 @@
 # Baseline benchmarking
 
-Phase 1.5 controlled studies and results are tracked in [`experiments/`](experiments/README.md). The current E005 interval screening is AC-only and does not quantify battery energy.
+Phase 1.5 controlled studies and results are tracked in [`experiments/`](experiments/README.md). E005 now has three AC repeats per interval for collector wall/CPU overhead; it does not quantify battery energy or battery-side overhead.
 
 `maclean benchmark run` records repeated, read-only telemetry trials as one JSON result. It does not launch or control the workload. For example:
 

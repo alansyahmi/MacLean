@@ -18,10 +18,10 @@ MacLean advances only when each phase produces reviewable evidence. Safety requi
 
 ## Immediate work
 
-1. Review the controlled protocols under `benchmarks/experiments/` and repeat E005 at least three times per sampling interval using the current release while plugged in; the previous screening pass was physically on battery despite `pmset` reporting AC.
+1. E005's current-release AC overhead study is complete with three repeats per interval; review its wall/CPU trade-offs. Battery-side overhead and energy impact remain unmeasured.
 2. When the operator can disconnect AC and leave the Mac idle, run three quiet, ten-minute battery-powered `desktop-idle` trials with the voltage fallback. The earlier CPU-only idle runs were physically unplugged but have no energy integral; record the physical condition and both power-source readings in future reports.
 3. Use an explicitly authorized privileged session to validate the exact `powermetrics` output and privilege requirement; MacLean must never elevate automatically.
-4. Use read-only Thunderbolt counts only as topology inventory. Keep active GPU, controller power states, package residency, and process attribution unavailable until their sources and output are validated.
+4. Use read-only Thunderbolt counts only as topology inventory. Driver-reported GPU utilization is available when published, but actual GPU selection/power state, Thunderbolt controller power, package residency, and process attribution remain unavailable until their sources and output are validated.
 5. Select the first optimization only after repeatable energy and performance measurements identify an actionable bottleneck. Do not implement invasive hardware controls until a documented reversible interface exists.
 
 ## Promotion criteria
