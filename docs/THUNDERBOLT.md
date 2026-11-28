@@ -16,6 +16,16 @@ Observe the complete device chain: peripheral, cable, dock, display, host contro
 - Inspect supported operating-system diagnostics and power assertions.
 - Treat bus power, host-controller energy, link state, and endpoint-device power as separate unknowns.
 
+## Current telemetry boundary
+
+On the validation host, `system_profiler -listDataTypes` lists `SPThunderboltDataType` and `SPPCIDataType`. MacLean's doctor command reads a privacy-filtered topology count from the Thunderbolt inventory; this is an inventory snapshot, not a runtime sampler.
+
+The installed `powermetrics(1)` manual documents an `interrupts` sampler with per-CPU interrupt frequencies and device labels, and an Intel `cpu_power` sampler with package and per-core C-state residency. These are useful activity indicators when available, but an interrupt label does not measure controller power or prove that the controller caused a package idle exit. Package-power readings are estimates from Intel's energy model, not a substitute for battery discharge measurements. MacLean's optional backend does not yet parse interrupt-source detail, and its package-residency parser has not been checked against an explicitly authorized sample from the target build.
+
+Apple's public PCIDriverKit documentation describes `IOPCIDevice` as a provider passed to a custom PCI driver's `IOService` subclass and includes device power-management and ASPM methods. That is a driver development interface for matching PCI hardware, not a general app-level API for observing a built-in Thunderbolt host controller. The reviewed public documentation does not establish a supported MacLean user-space source for live controller/link power state. Do not infer such a source from private IOKit classes or undocumented registry properties. See [PCIDriverKit](https://developer.apple.com/documentation/pcidriverkit) and [IOPCIDevice](https://developer.apple.com/documentation/pcidriverkit/iopcidevice).
+
+The next evidence step is a short, explicitly authorized `powermetrics` capture using only `cpu_power` and `interrupts`, followed by output and parser validation. Keep the capture local and avoid process/task samplers for this experiment. If no interrupt source can be associated reliably with a selected peripheral, report that limitation and continue comparing whole-system battery energy without attributing a cause.
+
 ## PCIe ASPM and power gating
 
 PCIe Active State Power Management and controller power-gating behaviour are coordinated across hardware, firmware, drivers, and OS power policy. Apple PCIDriverKit provides power-management and ASPM methods to custom PCI device drivers, but this does not establish an app-level control for MacLean or availability for a built-in host controller. A visible link or device property is not evidence that MacLean has a supported control path. Do not write PCIe configuration space, change undocumented NVRAM settings, unload drivers, or force controller suspension.

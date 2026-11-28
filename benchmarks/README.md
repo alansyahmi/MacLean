@@ -2,6 +2,8 @@
 
 Phase 1.5 controlled studies and results are tracked in [`experiments/`](experiments/README.md). E005 now has three AC repeats per interval for collector wall/CPU overhead; it does not quantify battery energy or battery-side overhead.
 
+A reviewed, privacy-filtered two-repeat screen-on idle starter summary is in [`baseline/desktop-idle-starter-2026-11-28.md`](baseline/desktop-idle-starter-2026-11-28.md). Its raw JSON remains local. It is not a controlled peripheral comparison.
+
 `maclean benchmark run` records repeated, read-only telemetry trials as one JSON result. It does not launch or control the workload. For example:
 
 ```sh
