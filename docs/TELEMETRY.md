@@ -28,6 +28,7 @@ Every observation carries a stable name, numeric or categorical value, unit, sou
 | Thermal state | Foundation `ProcessInfo.thermalState` | Coarse OS state only; no physical temperature. |
 | Collector cost | Monotonic wall time and `getrusage` CPU time | Collector work only; includes first-sample host discovery. Idle wait, JSON serialization, and output writing are excluded. |
 | Frequency, CPU package power and C-state | Optional explicit `powermetrics` sampler | Disabled by default and accepted only when the process is already root. Package power is an OS estimate. Unparsed/unsupported values remain unavailable. |
+| Interrupt source rate | Optional explicit `powermetrics` interrupts sampler | Per-label rates are summed across logical CPUs and marked derived. Labels are opaque OS-reported abbreviations, not verified controller identities; absent labels are not turned into zero. Package-idle exit and process wakeup attribution remain unavailable. |
 | GPU activity | `IOAccelerator` driver's `PerformanceStatistics["Device Utilization %"]`, when published | Driver-reported utilization is exposed per driver class. It may be absent and is not a hardware power-state reading. |
 | Active GPU/power | No validated cross-model source | Utilization can show activity but does not prove which GPU is powered/selected or report its watts. |
 | Thunderbolt topology/power | On-demand `system_profiler` inventory only | Controller power state is unavailable; topology is not sampled at monitor cadence. |
@@ -51,7 +52,7 @@ Benchmark commands do not launch the described workload, turn off a display, or 
 
 ## Privileged diagnostic boundary
 
-The normal monitor and benchmark never request privileges. `benchmark run --powermetrics` is explicit and disabled by default; it is rejected unless already launched with effective UID 0. It calls `/usr/bin/powermetrics` directly and never invokes `sudo` or retries under higher privileges. Since the complete CLI process runs with that UID, the option is restricted to intentional diagnostic runs. `cpu_power,battery,interrupts` samplers run once per sample interval; their cost appears in collector timing. Only reviewed Intel frequency, package C-state, and package-power fields are parsed; power is labeled estimated. The exact OS manual remains authoritative for supported samplers, availability, and interpretation.
+The normal monitor and benchmark never request privileges. `benchmark run --powermetrics` is explicit and disabled by default; it is rejected unless already launched with effective UID 0. It calls `/usr/bin/powermetrics` directly and never invokes `sudo` or retries under higher privileges. Since the complete CLI process runs with that UID, the option is restricted to intentional diagnostic runs. `cpu_power,battery,interrupts` samplers run once per sample interval; their cost appears in collector timing. The parser reads Intel average frequency, package C-state residency, estimated package power, and interrupt rates grouped by source label. It does not parse task names or package-idle exits. The exact OS manual remains authoritative for supported samplers, availability, and interpretation.
 
 ## Privacy and experiment record
 

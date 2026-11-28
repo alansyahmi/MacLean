@@ -11,14 +11,14 @@ Keep the Mac model/build, battery state, screen brightness, displays, apps, netw
 ## Measurement sources
 
 - Battery discharge watts and integrated watt-hours from MacLean when battery-powered coverage is valid.
-- The installed `powermetrics(1)` manual lists an `interrupts` sampler and an Intel `cpu_power` sampler that reports package C-state residency. MacLean's optional backend currently parses a candidate Intel package-residency field but does not parse interrupt-source detail; neither field has yet been validated against a privileged sample from this target OS build.
+- The installed `powermetrics(1)` manual lists an `interrupts` sampler and an Intel `cpu_power` sampler that reports package C-state residency. A target-build sample validated the package-residency and interrupt-vector text fields; MacLean now emits per-source-label interrupt rates summed across logical CPUs. These labels are not mapped to Thunderbolt controllers, and package-idle exits remain unavailable.
 - Optional explicitly authorized `powermetrics` package-power output is an Intel energy-model estimate and must remain separate from whole-system battery measurements.
 - `system_profiler` Thunderbolt topology counts from `maclean doctor`; counts do not imply runtime power state.
 - Thunderbolt controller power, PCIe ASPM, and power-gating state: unavailable from a validated source.
 
 ## Procedure
 
-1. Validate the target's read-only `powermetrics -s cpu_power,interrupts` output in an explicitly authorized diagnostic session. Keep any raw output local, and add only privacy-reviewed parser fixtures. Do not include task/process sampling for this experiment unless its privacy and attribution value are separately justified.
+1. Before repeated measurements, run a quiet structured MacLean benchmark with `--powermetrics` at the intended interval and quantify its added collector wall/CPU cost. The complete CLI must already be explicitly launched with administrator authorization; MacLean never elevates itself. Do not include task/process sampling unless its privacy and attribution value are separately justified.
 2. Inventory connected devices and confirm which are nonessential. Do not disconnect required storage, displays, networking, charging, or safety equipment.
 3. Run at least three 10-minute desktop-idle trials with the selected peripheral connected, then three with it disconnected. The operator handles physical connections; MacLean does not alter device state.
 4. Keep all other conditions fixed, record trial order, and reject trials with sleep/wake, AC transitions, thermal pressure, or substantial user activity.
@@ -30,7 +30,7 @@ Three valid repeats per condition; 95% or greater battery-power coverage; the pe
 
 ## Results
 
-The controlled peripheral comparison has not been run. A provisional two-repeat, screen-on desktop-idle reference is recorded in [`../../baseline/desktop-idle-starter-2026-11-28.md`](../../baseline/desktop-idle-starter-2026-11-28.md), but its peripheral configuration is unknown, so it is not an E002 control condition. On this host, System Profiler exposes a Thunderbolt data type and MacLean can report controller/receptacle counts. The local powermetrics manual documents candidate CPU C-state and interrupt samplers, but target output has not been validated. None of these observations establishes controller suspension or a Thunderbolt-to-package-wakeup causal link.
+The controlled peripheral comparison has not been run. A provisional two-repeat, screen-on desktop-idle reference is recorded in [`../../baseline/desktop-idle-starter-2026-11-28.md`](../../baseline/desktop-idle-starter-2026-11-28.md), but its peripheral configuration is unknown, so it is not an E002 control condition. On this host, System Profiler exposes a Thunderbolt data type and MacLean can report controller/receptacle counts. The target-build powermetrics capture reported 0% package C-state residency and active CPU/GPU fields, so it was not a quiet baseline. Its short sample showed no Thunderbolt-specific interrupt label; this is not evidence of controller inactivity. No causal Thunderbolt-to-package-wakeup link has been established.
 
 ## Limitations
 

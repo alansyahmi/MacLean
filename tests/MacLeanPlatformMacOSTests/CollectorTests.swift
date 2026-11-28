@@ -138,8 +138,54 @@ final class CollectorTests: XCTestCase {
         XCTAssertEqual(metrics["cpu.package_power_estimate"]?.quality, .osEstimate)
         XCTAssertEqual(metrics["cpu.frequency"]?.value, 3485.62)
         XCTAssertEqual(metrics["cpu.package_c_state_residency"]?.value, 57.93)
+        XCTAssertEqual(metrics["cpu.interrupt_rate"]?.quality, .unavailable)
+        XCTAssertNil(metrics["cpu.interrupt_rate"]?.value)
         XCTAssertEqual(metrics["cpu.wakeups"]?.quality, .unavailable)
         XCTAssertNil(metrics["cpu.wakeups"]?.value)
+    }
+
+    func testPowermetricsParserUsesLatestSampleAndAggregatesInterruptRatesByLabel() throws {
+        let fixture = """
+        *** Sampled system activity (redacted) (5000.25ms elapsed) ***
+        **** Interrupt distribution ****
+        CPU 0:
+        \tVector 0x7e(IGPU): 12.00 interrupts/sec
+        \tVector 0xdd(TMR): 7.00 interrupts/sec
+        CPU 1:
+        \tVector 0x7e(IGPU): 8.00 interrupts/sec
+        **** Processor usage ****
+        Intel energy model derived package power (CPUs+GT+SA): 6.01W
+        System Average frequency as fraction of nominal: 99.59% (1799.97 Mhz)
+        Package 0 C-state residency: 0.00% (C2: 0.00% C3: 0.00%)
+
+        *** Sampled system activity (redacted) (5001.75ms elapsed) ***
+        **** Interrupt distribution ****
+        CPU 0:
+        \tVector 0x7e(IGPU): 20.50 interrupts/sec
+        CPU 1:
+        \tVector 0x7e(IGPU): 30.25 interrupts/sec
+        **** Processor usage ****
+        Intel energy model derived package power (CPUs+GT+SA): 5.50W
+        System Average frequency as fraction of nominal: 75.00% (1800.00 Mhz)
+        Package 0 C-state residency: 0.00% (C2: 0.00% C3: 0.00%)
+        """
+
+        let metrics = Dictionary(
+            uniqueKeysWithValues: MacLeanPowermetricsCollector.parseIntelCPUText(fixture).map { ($0.name, $0) }
+        )
+
+        let igpu = try XCTUnwrap(metrics["cpu.interrupt_rate.igpu"])
+        XCTAssertEqual(igpu.value, 50.75)
+        XCTAssertEqual(igpu.text, "IGPU")
+        XCTAssertEqual(igpu.unit, "interrupts/s")
+        XCTAssertEqual(igpu.quality, .derived)
+        XCTAssertEqual(try XCTUnwrap(igpu.windowSeconds), 5.00175, accuracy: 0.00001)
+        XCTAssertNil(metrics["cpu.interrupt_rate.tmr"]?.value)
+        XCTAssertNil(metrics["cpu.interrupt_rate"])
+        XCTAssertEqual(metrics["cpu.package_c_state_residency"]?.value, 0)
+        XCTAssertEqual(metrics["cpu.package_power_estimate"]?.value, 5.50)
+        XCTAssertEqual(metrics["cpu.frequency"]?.value, 1800.00)
+        XCTAssertEqual(metrics["cpu.wakeups"]?.quality, .unavailable)
     }
 
     func testCPUTickOrderCountsIdleAsIdleAndNiceAsBusy() throws {

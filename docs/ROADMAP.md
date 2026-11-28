@@ -6,7 +6,7 @@ MacLean advances only when each phase produces reviewable evidence. Safety requi
 |---|---|---|---|
 | 0 | Hardware discovery | Privacy-conscious host inventory and capability matrix | Initial `doctor` inventory exists; target model/build and remaining unknown capabilities still need confirmation |
 | 1 | Baseline measurement and extended telemetry | Repeatable JSON benchmark trials, native battery current/voltage reads, comparison utility, optional privileged diagnostics | Tooling is implemented; a provisional two-repeat screen-on battery idle starter reference exists. A larger matched set is still needed to characterize normal variation |
-| 1.5 | Energy bottleneck attribution | Validated telemetry and controlled experiment registry | Starter baseline exists; target `powermetrics` output validation and a controlled E002 peripheral comparison remain outstanding |
+| 1.5 | Energy bottleneck attribution | Validated telemetry and controlled experiment registry | Starter baseline and target `powermetrics` output validation exist; a quiet structured capture and controlled E002 peripheral comparison remain outstanding |
 | 2 | First measurable optimization | Select a module from E001–E005 evidence | Repeatable energy-per-task improvement with acceptable performance and stability |
 | 3 | Graphics | Read-only integrated/discrete GPU activity and switching study | Scenarios mapped to OS/driver behaviour; no forced GPU disablement |
 | 4 | Thunderbolt and PCIe | Peripheral activity, link, sleep/wake, and ASPM research | Device/controller effects distinguished; connectivity and wake behaviour preserved |
@@ -20,7 +20,7 @@ MacLean advances only when each phase produces reviewable evidence. Safety requi
 
 1. E005's current-release AC overhead study is complete with three repeats per interval; review its wall/CPU trade-offs. Battery-side overhead and energy impact remain unmeasured.
 2. A provisional screen-on battery idle reference now uses Trials 2 and 3; Trial 1 is excluded because the operator reports Finder-window activity. The two included trials began at 4–5% charge, and their peripheral configuration is unknown. Use the reference as a starter only; collect better-matched repeats before making an optimization claim.
-3. Validate the exact `powermetrics` C-state and interrupt output in a short, explicitly authorized privileged session. The current backend does not parse interrupt-source detail; MacLean must never elevate automatically.
+3. The target `powermetrics` text output and per-label interrupt parser are validated. The one-off privileged capture was busy, with 0% package C-state residency; run a quiet structured sample and measure collector overhead before using privileged sampling in repeated energy trials. MacLean must never elevate automatically.
 4. Use read-only Thunderbolt counts only as topology inventory. Driver-reported GPU utilization is available when published, but actual GPU selection/power state and Thunderbolt controller power remain unavailable. A device interrupt, if observed, is not proof of controller power state or causal package wakeups.
 5. Select the first optimization only after repeatable energy and performance measurements identify an actionable bottleneck. Do not implement invasive hardware controls until a documented reversible interface exists.
 
